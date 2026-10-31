@@ -104,7 +104,9 @@ steps, and a first-session walkthrough.
 | **Policies** | 2 | remote-settings.json, policy-limits.json |
 | **Scripts** | 1 | setup-workbench.sh (initializes the local coordination branch) |
 | **Templates** | 1 | AGENTS.md template for task coordination |
-| **.claudeignore** | 1 | Context exclusions for large/irrelevant files |
+
+
+Claude Code does not support `.claudeignore`; that file does not exclude paths from context. For sensitive paths, this toolkit uses `Read(...)` entries under `permissions.deny` in `.claude/settings.json`. See [Claude Code permissions](https://code.claude.com/docs/en/permissions#read-and-edit).
 
 ### Cursor IDE (`.cursor/`)
 
