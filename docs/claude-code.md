@@ -26,7 +26,6 @@ What this configuration adds:
 │   └── validate-year.sh    # PreToolUse/Write: block stale copyright years in new files
 ├── plugins/
 │   └── installed_plugins.json
-├── .claudeignore           # Patterns excluded from Claude's context window
 ├── policy-limits.json      # Disable product feedback prompts and remote sessions
 └── remote-settings.json    # Network restrictions for sandboxed/remote use
 ```
@@ -501,23 +500,13 @@ Disables two features at the policy level:
 - `allow_product_feedback: false` — Suppresses prompts asking for product feedback during sessions.
 - `allow_remote_sessions: false` — Disables the remote session functionality (Claude Code's ability to be accessed as a remote agent). Sessions are local-only.
 
-### .claudeignore
+### Claude Code file-read restrictions
 
-Controls which files and directories Claude Code reads into its context window. Keeping large, irrelevant files out of context improves response quality and reduces token consumption.
+Claude Code does not read `.claudeignore` files. Adding paths to one does not exclude those paths from context or prevent access. The `.claudeignore` entry formerly shown in the file-layout example is not a file in this repository.
 
-**Excluded categories:**
+This toolkit already defines `Read(...)` rules under `permissions.deny` in `.claude/settings.json` for sensitive paths such as `.env` files, private keys, and SSH credentials. To restrict additional directories, configure matching `Read(...)` deny rules there or in managed settings, then verify the rules with the Claude Code permission tools. A `Read` denial does not by itself restrict arbitrary shell commands or provide an OS sandbox.
 
-| Category | Patterns |
-|----------|---------|
-| Dependencies | `node_modules/`, `vendor/`, `.venv/`, `__pycache__/`, `*.pyc` |
-| Build artifacts | `dist/`, `build/`, `bin/`, `*.exe`, `*.dll`, `*.so`, `*.dylib` |
-| Large data files | `*.log`, `*.sql`, `*.csv`, `*.parquet`, `*.zip`, `*.tar`, `*.gz`, `*.jar`, `*.whl` |
-| IDE metadata | `.idea/`, `.vscode/`, `*.swp`, `*.swo` |
-| Cache directories | `.cache/`, `*.cache`, `.pytest_cache/`, `.mypy_cache/` |
-| Git internals | `.git/objects/` |
-| Media files | `*.mp4`, `*.mov`, `*.png`, `*.jpg`, `*.jpeg`, `*.gif`, `*.pdf` |
-
-Note: `.git/objects/` is excluded specifically to avoid loading pack-file history from large repositories into context.
+See [Anthropic's Claude Code permissions guide](https://code.claude.com/docs/en/permissions#read-and-edit) for current syntax and coverage.
 
 ### remote-settings.json
 
